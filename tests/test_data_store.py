@@ -3,7 +3,8 @@ import json
 import os
 from unittest.mock import mock_open, patch
 
-from app.data_store import DataHandler
+from app.data_store import DataHandler 
+from app.currency import Currency
 
 class TestDataHandler():
 
@@ -23,7 +24,7 @@ class TestDataHandler():
     def test_attributes(self, data_handler_instance):
         data_Handler = data_handler_instance
 
-        assert data_Handler.json_path.endswith("test.json")
+        assert data_Handler.json_path.endswith("data/test.json")
         assert data_Handler.json_path is not None
 
     def test_read_data(self, data_handler_instance, json_data, mocker):
@@ -34,4 +35,18 @@ class TestDataHandler():
 
         assert data_handler_instance.data == json_data
 
+    def test_list_stored_currencies(self, data_handler_instance, json_data, mocker):
+        mocker.patch('builtins.open', mocker.mock_open(read_data=json.dumps(json_data)))
 
+        data_handler_instance.read_data()
+
+        assert data_handler_instance.list_stored_currencies() == ["USD"]
+
+    def test_add_currency(self, data_handler_instance, json_data):
+        data_Handler = data_handler_instance
+        euro = Currency(name="EUR", dolar_course=0.9)
+        data_Handler.add_currency(euro)
+
+        assert data_Handler.data == {
+            'EUR': 0.9
+        }

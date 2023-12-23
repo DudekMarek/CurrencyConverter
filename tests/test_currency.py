@@ -18,6 +18,11 @@ class TestCurrency:
         assert obj.name == "Currency"
         assert obj.dolar_course == 1.24
 
+    def test_return_dict(self, currency_instance):
+        obj = currency_instance 
+
+        assert currency_instance.return_dict() == {"Currency": 1.24}
+
     @pytest.mark.parametrize("currency, dollar", [(1, 1.24), (2, 2.48)])
     def test_convert_to_dollar(self, currency_instance, currency, dollar):
         obj = currency_instance
