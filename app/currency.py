@@ -4,7 +4,7 @@ class Currency():
 
     def __init__(self, dolar_course: float, name: str):
         self.name = name
-        self.dolar_course = dolar_course
+        self.dolar_course= float(dolar_course)
 
     def return_dict(self):
         return {self.name:self.dolar_course}

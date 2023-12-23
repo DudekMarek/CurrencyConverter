@@ -22,8 +22,14 @@ def main():
     # Sub-parser for listing entities
     list_parser = subparsers.add_parser("list", help="List available currencies")
 
-    #Sub-parser for adding currencies
+    # Sub-parser for adding currencies
     add_parser = subparsers.add_parser("add", help="Add new currency")
+
+    # Sub-parser for currency converter
+    convert_parser = subparsers.add_parser("convert", help="Convert one currency to another")
+    convert_parser.add_argument("-f", "--from-currency", help="Currency that you want to convert", type=str, choices=data_handler.list_stored_currencies())
+    convert_parser.add_argument("-t", "--target-currency", help="Target currency", type=str, choices=data_handler.list_stored_currencies())
+    convert_parser.add_argument("-a", "--amount", help="Amount of currency to convert", type=float)
 
 
     args = parser.parse_args()
@@ -40,18 +46,16 @@ def main():
 
         data_handler.add_currency(new_currency)
 
-    # parser.add_argument("-l", "--list", help="List available currencies", action="store_true")
-    # parser.add_argument("-a", "--add-currency", help="Add new currency in following format: CURRENCY_NAME:COURSE_TO_DOLLAR")
-    # args = parser.parse_args()
+    elif args.operations == "convert":
+        from_currency_name = args.from_currency
+        target_currency_name = args.target_currency
+        amount = args.amount
+        from_currency = Currency(name=from_currency_name, dolar_course=data_handler.data[from_currency_name])
+        target_currency = Currency(name=target_currency_name, dolar_course=data_handler.data[target_currency_name])
 
-    # if args.list:
-    #     for item in data_handler.list_stored_currencies():
-    #         print(item)
-    #     sys.exit(0)
+        print(from_currency.convert_to_another_currency(target_currency, amount))
 
-    # if args.add_currency:
-    #     new_currency = Currency()
-    #     data_handler.add_currency()
+
 
 if __name__ == "__main__":
     main()
